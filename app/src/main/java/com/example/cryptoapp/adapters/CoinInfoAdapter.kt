@@ -1,5 +1,6 @@
 package com.example.cryptoapp.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ class CoinInfoAdapter(private val context: Context) : RecyclerView.Adapter<CoinI
     var coinInfoList: List<CoinPriceInfo> = listOf()
         set(value) {
             field = value
+            notifyDataSetChanged()
         }
 
     var onCoinClickListener: OnCoinClickListener? = null
