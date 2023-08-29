@@ -6,15 +6,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.cryptoapp.R
-import com.example.cryptoapp.data.model.CoinInfo
-import com.example.cryptoapp.data.model.CoinPriceInfo
+import com.example.cryptoapp.data.network.model.CoinNameDto
+import com.example.cryptoapp.data.network.model.CoinInfoDto
 import com.example.cryptoapp.presentation.CoinInfoDiffCallback
 import com.example.cryptoapp.presentation.CoinInfoViewHolder
 import com.squareup.picasso.Picasso
 
-class CoinInfoAdapter: ListAdapter<CoinInfo, CoinInfoViewHolder>(CoinInfoDiffCallback()) {
+class CoinInfoAdapter: ListAdapter<CoinNameDto, CoinInfoViewHolder>(CoinInfoDiffCallback()) {
 
-    var coinInfoList: List<CoinPriceInfo> = listOf()
+    var coinInfoList: List<CoinInfoDto> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -55,6 +55,6 @@ class CoinInfoAdapter: ListAdapter<CoinInfo, CoinInfoViewHolder>(CoinInfoDiffCal
     }
 
     interface OnCoinClickListener {
-        fun onCoinClick(coinPriceInfo: CoinPriceInfo)
+        fun onCoinClick(coinInfoDto: CoinInfoDto)
     }
 }
