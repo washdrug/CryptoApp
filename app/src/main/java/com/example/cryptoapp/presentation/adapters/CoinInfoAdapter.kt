@@ -1,20 +1,23 @@
 package com.example.cryptoapp.presentation.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.cryptoapp.R
-import com.example.cryptoapp.data.network.model.CoinNameDto
-import com.example.cryptoapp.data.network.model.CoinInfoDto
+import com.example.cryptoapp.data.network.ApiFactory
+import com.example.cryptoapp.domain.CoinInfo
 import com.example.cryptoapp.presentation.CoinInfoDiffCallback
 import com.example.cryptoapp.presentation.CoinInfoViewHolder
+import com.example.cryptoapp.utils.convertTimestampToTime
 import com.squareup.picasso.Picasso
 
-class CoinInfoAdapter: ListAdapter<CoinNameDto, CoinInfoViewHolder>(CoinInfoDiffCallback()) {
+class CoinInfoAdapter(private val context: Context) :
+    ListAdapter<CoinInfo, CoinInfoViewHolder>(CoinInfoDiffCallback()) {
 
-    var coinInfoList: List<CoinInfoDto> = listOf()
+    var coinInfoList: List<CoinInfo> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -45,8 +48,8 @@ class CoinInfoAdapter: ListAdapter<CoinNameDto, CoinInfoViewHolder>(CoinInfoDiff
                 val lastUpdateTemplate = context.resources.getString(R.string.last_update_template)
                 binding.tvSymbols.text = String.format(symbolsTemplate, fromSymbol, toSymbol)
                 tvPrice.text = price
-                tvLastUpdate.text = String.format(lastUpdateTemplate, getFormattedTime())
-                Picasso.get().load(getFullImageUrl()).into(ivLogoCoin)
+                tvLastUpdate.text = String.format(lastUpdateTemplate, convertTimestampToTime(lastUpdate))
+                Picasso.get().load(ApiFactory.BASE_IMAGE_URL + imageUrl).into(ivLogoCoin)
                 itemView.setOnClickListener {
                     onCoinClickListener?.onCoinClick(this)
                 }
@@ -55,6 +58,6 @@ class CoinInfoAdapter: ListAdapter<CoinNameDto, CoinInfoViewHolder>(CoinInfoDiff
     }
 
     interface OnCoinClickListener {
-        fun onCoinClick(coinInfoDto: CoinInfoDto)
+        fun onCoinClick(coinInfoDto: CoinInfo)
     }
 }

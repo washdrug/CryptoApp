@@ -31,12 +31,15 @@ class CoinInfoRepositoryImpl(private val context: Context) : CoinInfoRepository 
 
     override suspend fun loadData() {
         while (true) {
-            val topCoins = apiService.getTopCoinsInfo(limit = 50)
-            val fSyms = mapper.mapNamesListToString(topCoins)
-            val topCoinsInfoJsonContainer = apiService.getFullPriceList(fSyms = fSyms)
-            val topCoinsInfoDtoList = mapper.mapJsonContainerToList(topCoinsInfoJsonContainer)
-            val topCoinsInfoDbModel = topCoinsInfoDtoList.map { mapper.mapDtoToDBModel(it) }
-            coinInfoDao.insertPriceList(topCoinsInfoDbModel)
+            try {
+                val topCoins = apiService.getTopCoinsInfo(limit = 50)
+                val fSyms = mapper.mapNamesListToString(topCoins)
+                val topCoinsInfoJsonContainer = apiService.getFullPriceList(fSyms = fSyms)
+                val topCoinsInfoDtoList = mapper.mapJsonContainerToList(topCoinsInfoJsonContainer)
+                val topCoinsInfoDbModel = topCoinsInfoDtoList.map { mapper.mapDtoToDBModel(it) }
+                coinInfoDao.insertPriceList(topCoinsInfoDbModel)
+            } catch (_: Exception) {
+            }
             delay(10000)
         }
     }
