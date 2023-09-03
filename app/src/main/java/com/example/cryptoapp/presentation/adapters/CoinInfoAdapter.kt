@@ -49,6 +49,6 @@ class CoinInfoAdapter(private val context: Context) : RecyclerView.Adapter<CoinI
     }
 
     interface OnCoinClickListener {
-        fun onCoinClick(coinInfoDto: CoinInfo)
+        fun onCoinClick(coinInfo: CoinInfo)
     }
 }
