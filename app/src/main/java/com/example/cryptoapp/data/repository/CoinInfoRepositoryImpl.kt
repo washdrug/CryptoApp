@@ -1,20 +1,23 @@
 package com.example.cryptoapp.data.repository
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
-import com.example.cryptoapp.data.database.AppDatabase
+import com.example.cryptoapp.data.database.CoinInfoDao
 import com.example.cryptoapp.data.mapper.CoinMapper
 import com.example.cryptoapp.data.workers.RefreshDataWorker
 import com.example.cryptoapp.domain.CoinInfo
 import com.example.cryptoapp.domain.CoinInfoRepository
+import javax.inject.Inject
 
-class CoinInfoRepositoryImpl(private val context: Context) : CoinInfoRepository {
+class CoinInfoRepositoryImpl @Inject constructor(
+    private val application: Application,
+    private val mapper: CoinMapper,
+    private val coinInfoDao: CoinInfoDao
+) : CoinInfoRepository {
 
-    private val coinInfoDao = AppDatabase.getInstance(context).coinPriceInfoDao()
-    private val mapper = CoinMapper()
     override fun getCoinInfoList(): LiveData<List<CoinInfo>> {
         return coinInfoDao.getCoinInfoList().map {
             it.map { dbModel ->
@@ -30,7 +33,7 @@ class CoinInfoRepositoryImpl(private val context: Context) : CoinInfoRepository 
     }
 
     override fun loadData() {
-        val workManager = WorkManager.getInstance(context)
+        val workManager = WorkManager.getInstance(application)
         workManager.enqueueUniqueWork(
             RefreshDataWorker.NAME,
             ExistingWorkPolicy.REPLACE,
